@@ -1,24 +1,21 @@
 pipeline {
-    agent any
+
+    parameters {
+        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+    } 
     environment {
-        DISABLE_AUTH = 'true'
-        DB_ENGINE    = 'sqlite'
-	AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
 
+   agent  any
     stages {
-        stage('Build') {
+        stage('checkout') {
             steps {
-<<<<<<< HEAD
-                echo "Database engine is ${DB_ENGINE}"
-                echo "DISABLE_AUTH is ${DISABLE_AUTH}"
-		echo "AWS Access Key is ${AWS_ACCESS_KEY_ID}"
-                sh 'printenv'
-=======
                  script{
                         dir("terraform")
                         {
-                            git "https://github.com/yeshwanthlm/Terraform-Jenkins.git"
+                            git "https://github.com/astrophagist/Terraform-Jenkins.git"
                         }
                     }
                 }
@@ -36,7 +33,7 @@ pipeline {
                not {
                    equals expected: true, actual: params.autoApprove
                }
-           }
+          }
 
            steps {
                script {
@@ -46,12 +43,11 @@ pipeline {
                }
            }
        }
-
         stage('Apply') {
             steps {
                 sh "pwd;cd terraform/ ; terraform apply -input=false tfplan"
->>>>>>> parent of 132735e (update to jenkinsfile and main.tf)
             }
         }
     }
-}
+
+  }
