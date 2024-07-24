@@ -15,6 +15,7 @@ pipeline {
                 git branch: 'main', 
                     url: 'https://github.com/astrophagist/Terraform-Jenkins.git'
             }
+	}
         stage('Plan') {
             steps {
                 sh 'pwd;cd terraform/ ; terraform init'
