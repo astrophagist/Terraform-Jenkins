@@ -7,42 +7,55 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
-
-   agent  any
     stages {
-        stage('checkout') {
+        stage('Example stage 1') {
             steps {
-                 script{
-                        dir("terraform")
-                        {
-                            git "https://github.com/astrophagist/Terraform-Jenkins.git"
-                        }
-                    }
-                }
-            }
-
-        stage('Plan') {
-            steps {
-                sh 'pwd;cd terraform/ ; terraform init'
-                sh "pwd;cd terraform/ ; terraform plan -out tfplan"
-                sh 'pwd;cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
+                // 
             }
         }
-        stage('Approval') {
-           when {
-               not {
-                   equals expected: true, actual: params.autoApprove
-               }
-           }
+        stage('Example stage 2') {
+            steps {
+                // 
+            }
+        }
+    }
+}
 
-           steps {
-               script {
-                    def plan = readFile 'terraform/tfplan.txt'
-                    input message: "Do you want to apply the plan?",
-                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
-               }
-           }
-       }
+#   agent  any
+#    stages {
+#        stage('checkout') {
+#            steps {
+#                 script{
+#                        dir("terraform")
+#                        {
+#                            git "https://github.com/astrophagist/Terraform-Jenkins.git"
+#                        }
+#                    }
+#                }
+#            }
+
+#        stage('Plan') {
+#            steps {
+#                sh 'pwd;cd terraform/ ; terraform init'
+#                sh "pwd;cd terraform/ ; terraform plan -out tfplan"
+#                sh 'pwd;cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
+#            }
+#        }
+#        stage('Approval') {
+#           when {
+#               not {
+#                   equals expected: true, actual: params.autoApprove
+#               }
+#          }
+
+#           steps {
+#               script {
+#                    def plan = readFile 'terraform/tfplan.txt'
+#                    input message: "Do you want to apply the plan?",
+#                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+#               }
+#           }
+#       }
 
         stage('Apply') {
             steps {
