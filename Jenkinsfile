@@ -3,7 +3,7 @@ pipeline {
     environment {
         DISABLE_AUTH = 'true'
         DB_ENGINE    = 'sqlite'
-	AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+	AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
     }
 
     stages {
