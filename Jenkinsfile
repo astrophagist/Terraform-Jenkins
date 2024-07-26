@@ -37,12 +37,21 @@ pipeline {
                     parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
                }
            }
-       }
+        }
         stage('Apply') {
             steps {
                 sh "terraform apply -input=false tfplan"
             }
         }
+        stage('preview-destroy') {
+            when {
+                expression { params.action == 'preview-destroy' || params.action == 'destroy'}
+            }
+            steps {
+                sh 'terraform plan -no-color -destroy -out=tfplan -var "aws_region=${AWS_REGION}" --var-file=environments/${ENVIRONMENT}.vars'
+                sh 'terraform show -no-color tfplan > tfplan.txt'
+            }
+        }        
     }
 
   }
