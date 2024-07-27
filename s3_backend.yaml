@@ -8,6 +8,21 @@ Resources:
         Status: Enabled
       AccessControl: Private
 
+  TerraformStateBucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref TerraformStateBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action:
+              - 's3:GetObject'
+              - 's3:PutObject'
+              - 's3:DeleteObject'
+            Resource: !Sub "arn:aws:s3:::${TerraformStateBucket}/*"
+            
   TerraformLockTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
