@@ -22,7 +22,7 @@ Resources:
               - 's3:GetObject'
               - 's3:PutObject'
               - 's3:DeleteObject'
-            Resource: !Sub "${TerraformStateBucket.Arn}/*"
+            Resource: !Sub "arn:aws:s3:::${TerraformStateBucket}/*"
   TerraformLockTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
