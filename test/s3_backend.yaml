@@ -1,0 +1,52 @@
+AWSTemplateVersion: '2010-09-09'
+Resources:
+  TerraformStateBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub "${AWS"StackName}-terraform-state"
+      VersioningCOnfiguration:
+        Status: Enabled
+      AccessControl: Private
+
+  TerraformStateBucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref TerraformStateBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: "*"
+            Action:
+              - 's3:GetObject'
+              - 's3:PutObject'
+              - 's3:DeleteObject'
+            Resource: !Sub "${TerraformStateBucket.Arn}/*"
+  TerraformLockTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: !Sub "${AWS::StackName}-terraform-lock"
+      AttributeDefinitions:
+        - AttributeName: LockID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: LockID
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+Outputs:
+  BucketName:
+    Description: 'Name of the S3 bucket for Terraform State Files'
+    Value: !Ref TerraformStateBucket
+  BucketArn:
+    Description: 'ARN of the S3 bucket for Terraform State Files'
+    Value: !GetAtt TerraformStateBucket.Arn
+  DynamoDBTableName:
+    Description: 'Name of the DynamoDB table for Terraform State locking'
+    Value: !Ref TerraformLockTable
+  DynamoDBTableArn:
+    Description: 'ARN of the DynamoDB table for Terraform State locking'
+    Value: !GetAtt TerraformLockTable.Arn
