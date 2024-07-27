@@ -12,8 +12,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the version control system
-                git 'https://github.com/astrophagist/Terraform-Jenkins.git'
+                git branch: 'main', 
+                    url: 'https://github.com/astrophagist/Terraform-Jenkins.git'
             }
         }
         stage('Deploy CloudFormation Stack') {
