@@ -1,4 +1,4 @@
-AWSTemplateVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   TerraformStateBucket:
     Type: 'AWS::S3::Bucket'
